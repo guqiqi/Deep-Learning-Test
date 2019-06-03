@@ -21,10 +21,8 @@ class PixelAttacker:
         self.x_test, self.y_test = data
         # 转换数据格式
         self.x_test = self.x_test.reshape(self.x_test.shape[0], 28, 28, 1)
+        self.y_test = self.y_test[:, np.newaxis]
 
-        self.y_test = keras.utils.to_categorical(self.y_test, 10)
-
-        print(self.x_test.shape)
         self.class_names = class_names
         self.dimensions = dimensions
 
@@ -35,7 +33,8 @@ class PixelAttacker:
     def predict_classes(self, xs, img, target_class, model, minimize=True):
         # Perturb the image with the given pixel(s) x and get the prediction of the model
         imgs_perturbed = helper.perturb_image(xs, img)
-        predictions = model.predict(imgs_perturbed)[:, target_class]
+
+        predictions = model.predict(imgs_perturbed)[:, int(target_class)]
         # print(predictions)
         # This function should always be minimized, so return its complement if needed
         return predictions if minimize else 1 - predictions, imgs_perturbed
@@ -90,7 +89,7 @@ class PixelAttacker:
         predicted_class = np.argmax(predicted_probs)
         actual_class = self.y_test[img, 0]
         success = predicted_class != actual_class
-        cdiff = prior_probs[actual_class] - predicted_probs[actual_class]
+        cdiff = prior_probs[int(actual_class)] - predicted_probs[int(actual_class)]
 
         # Show the best attempt at a solution (successful or not)
         if plot:
@@ -131,16 +130,16 @@ class PixelAttacker:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Attack models on Cifar10')
-    parser.add_argument('--pixels', nargs='+', default=(3, 5), type=int,
+    parser.add_argument('--pixels', nargs='+', default=(5, 7), type=int,
                         help='The number of pixels that can be perturbed.')
     parser.add_argument('--maxiter', default=75, type=int,
                         help='The maximum number of iterations in the differential evolution algorithm before giving up and failing the attack.')
     parser.add_argument('--popsize', default=400, type=int,
                         help='The number of adversarial images generated each iteration in the differential evolution algorithm. Increasing this number requires more computation.')
-    parser.add_argument('--samples', default=3, type=int,
+    parser.add_argument('--samples', default=10, type=int,
                         help='The number of image samples to attack. Images are sampled randomly from the dataset.')
     parser.add_argument('--targeted', action='store_true', help='Set this switch to test for targeted attacks.')
-    parser.add_argument('--save', default='networks/results/results.pkl', help='Save location for the results (pickle)')
+    parser.add_argument('--save', default='result_data/results.pkl', help='Save location for the results (pickle)')
     parser.add_argument('--verbose', action='store_true', help='Print out additional information every iteration.')
 
     args = parser.parse_args()

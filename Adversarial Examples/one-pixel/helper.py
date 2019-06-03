@@ -11,9 +11,6 @@ from tqdm import tqdm
 
 
 def perturb_image(xs, img):
-    print('llll')
-    print(xs.shape)
-    print(img.shape)
     # If this function is passed just one perturbation vector,
     # pack it in a list to keep the computation the same
     if xs.ndim < 2:
@@ -33,8 +30,6 @@ def perturb_image(xs, img):
         # 保留整数
         pixels = np.split(x, len(x) // 3)
         for pixel in pixels:
-            print(pixel.shape)
-            print(',,,,')
             # At each pixel's x,y position, assign its rgb value
             x_pos, y_pos, *rgb = pixel
             img[x_pos, y_pos] = rgb
@@ -212,7 +207,7 @@ def load_results():
 def checkpoint(results, targeted=False):
     filename = 'targeted' if targeted else 'untargeted'
 
-    with open('networks/results/' + filename + '_results.pkl', 'wb') as file:
+    with open('result_data/' + filename + '_results.pkl', 'wb') as file:
         pickle.dump(results, file)
 
 

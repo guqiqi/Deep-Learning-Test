@@ -402,10 +402,6 @@ class DifferentialEvolutionSolver(object):
         # np.fabs函数 求绝对值
         self.__scale_arg2 = np.fabs(self.limits[0] - self.limits[1])
 
-        print(self.__scale_arg1)
-        print(self.__scale_arg2)
-        print("scale arg")
-
         self.parameter_count = np.size(self.limits, 1)
 
         self.random_number_generator = check_random_state(seed)
@@ -422,7 +418,6 @@ class DifferentialEvolutionSolver(object):
         self._nfev = 0
         if isinstance(init, string_types):
             if init == 'latinhypercube':
-                print('latinkkkk')
                 self.init_population_lhs()
             elif init == 'random':
                 self.init_population_random()
@@ -434,8 +429,6 @@ class DifferentialEvolutionSolver(object):
         self.disp = disp
 
     def init_population_lhs(self):
-        print(self.num_population_members)
-        print("!!!!!!!!!")
         """
         Initializes the population with Latin Hypercube Sampling.
         Latin Hypercube Sampling ensures that each parameter is uniformly
@@ -617,7 +610,6 @@ class DifferentialEvolutionSolver(object):
             success=(warning_flag is not True))
 
         if self.polish:
-            print("lll")
             result = minimize(self.func,
                               np.copy(DE_result.x),
                               method='L-BFGS-B',
