@@ -3,3 +3,9 @@
 *.npy
 *.pkl
 *.pyc
+/tensorflow-adversarial/
+mnist.meta
+mnist.data-00000-of-00001
+checkpoint
+*.png
+mnist.index
