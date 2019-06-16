@@ -136,7 +136,7 @@ def aiTest(images, shape=(1000, 28, 28, 1)):
 
     print('\nGenerating adversarial data')
 
-    X_adv = make_jsma(sess, env, images, epochs=50, eps=1.0)
+    X_adv = make_jsma(sess, env, images, epochs=100, eps=1.0)
     print(X_adv.shape)
 
     print('\nEvaluating on adversarial data')
@@ -160,5 +160,18 @@ X_test = X_test.astype(np.float32) / 255
 to_categorical = tf.keras.utils.to_categorical
 y_test = to_categorical(y_test)
 
-aiTest(X_test)
+X_test = X_test[0:1000, :]
+y_test = y_test[0:1000]
+
+x_gengrate = aiTest(X_test)
+
+from skimage.measure import compare_ssim
+m = 0.0
+for i in range(1000):
+    (score, diff) = compare_ssim(X_test[i][:, :, 0], x_gengrate[i][:, :, 0], full=True)
+    diff = (diff * 255).astype("uint8")
+    m = m + score
+    # print("SSIM: {}".format(score))
+
+print(m/1000)
 
