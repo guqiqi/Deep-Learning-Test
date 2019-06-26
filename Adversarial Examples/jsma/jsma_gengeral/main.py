@@ -2,7 +2,7 @@ import numpy as np
 
 import tensorflow as tf
 
-from attacks import jsma
+import jsma
 
 
 def model(x, logits=False, training=False):
@@ -65,7 +65,7 @@ def get_env():
         env.target = tf.placeholder(tf.int32, (), name='target')
         env.adv_epochs = tf.placeholder_with_default(20, shape=(), name='epochs')
         env.adv_eps = tf.placeholder_with_default(0.2, shape=(), name='eps')
-        env.x_jsma = jsma(model, env.x, env.target, eps=env.adv_eps,
+        env.x_jsma = jsma.jsma(model, env.x, env.target, eps=env.adv_eps,
                           epochs=env.adv_epochs)
 
     return env

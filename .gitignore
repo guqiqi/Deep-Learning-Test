@@ -6,6 +6,11 @@
 /tensorflow-adversarial/
 mnist.meta
 mnist.data-00000-of-00001
+mnist.index
 checkpoint
 *.png
-mnist.index
+
+
+lenet.meta
+lenet.data-00000-of-00001
+lenet.index
