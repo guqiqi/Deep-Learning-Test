@@ -14,6 +14,9 @@ X_train = X_train.astype(np.float32) / 255
 X_test = np.reshape(X_test, [-1, w, h, c])
 X_test = X_test.astype(np.float32) / 255
 
+X_train = np.r_[X_test, X_train]
+y_train = np.r_[y_test, y_train]
+print(X_test.shape)
 # to_categorical = tf.keras.utils.to_categorical
 # y_train = to_categorical(y_train)
 # y_test = to_categorical(y_test)
@@ -30,6 +33,8 @@ train_data = X_train[:n]
 test_label = y_train[n:]
 train_label = y_train[:n]
 
+print(test_data.shape)
+print(train_data.shape)
 
 # (train_data, train_label), (test_data, test_label) = fashion_mnist.load_data()
 
@@ -150,7 +155,7 @@ with tf.Session() as sess:
 
     # 将所有样本训练10次，每次训练中以64个为一组训练完所有样本。
     # train_num可以设置大一些。
-    train_num = 1
+    train_num = 2
     batch_size = 64
 
     for i in range(train_num):

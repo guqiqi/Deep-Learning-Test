@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+from skimage.measure import compare_ssim
+
 import jsma
 import deepfool
 
@@ -184,7 +186,17 @@ def make_deep_fool(x_data, epochs=20, eta=0.01, batch_size=64):
 
 
 def aiTest(images, shape=(1000, 28, 28, 1)):
-    return make_jsma(images)
+    return make_deep_fool(images)
+
+
+def get_ssim(img1, img2):
+    m = 0.0
+    for i in range(1000):
+        (score, diff) = compare_ssim(img1[i][:, :, 0], img2[i][:, :, 0], full=True)
+        diff = (diff * 255).astype("uint8")
+        m = m + score
+        # print("SSIM: {}".format(score))
+    return m / 1000
 
 
 print('\nLoading FASHION MNIST')
@@ -204,21 +216,8 @@ y_test = np.array(y_test, dtype=np.int32)
 
 evaluate(x_test, y_test, 1000)
 
-x_generate = make_deep_fool(x_test)
+x_generate = aiTest(x_test)
 
 evaluate(x_generate, y_test, 1000)
 
-ssim = tf.reduce_mean(tf.image.ssim(tf.convert_to_tensor(x_generate), tf.convert_to_tensor(x_test), 1.0))
-with tf.Session() as sess:
-    accu = sess.run(ssim)
-print(accu)
-
-from skimage.measure import compare_ssim
-m = 0.0
-for i in range(1000):
-    (score, diff) = compare_ssim(x_test[i][:, :, 0], x_generate[i][:, :, 0], full=True)
-    diff = (diff * 255).astype("uint8")
-    m = m + score
-    # print("SSIM: {}".format(score))
-
-print(m/1000)
+print(get_ssim(x_generate, x_test))
