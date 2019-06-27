@@ -96,7 +96,7 @@ def _jsma_impl(model, x, yind, epochs, eps, clip_min, clip_max, score_fn):
         return i+1, xadv
 
     _, xadv = tf.while_loop(_cond, _body, (0, tf.identity(x)),
-                            back_prop=False, name='_jsma_batch')
+                            back_prop=False, name='jsmabatch')
 
     return xadv
 
