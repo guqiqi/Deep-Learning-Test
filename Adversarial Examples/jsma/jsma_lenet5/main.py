@@ -186,7 +186,9 @@ def make_deep_fool(x_data, epochs=20, eta=0.01, batch_size=64):
 
 
 def aiTest(images, shape=(1000, 28, 28, 1)):
-    return make_deep_fool(images)
+    images = images / 256
+    result = make_deep_fool(images)
+    return result * 256
 
 
 def get_ssim(img1, img2):
