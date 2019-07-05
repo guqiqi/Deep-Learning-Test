@@ -199,27 +199,3 @@ def get_ssim(img1, img2):
         m = m + score
         # print("SSIM: {}".format(score))
     return m / 1000
-
-
-print('\nLoading FASHION MNIST')
-
-fashion_mnist = tf.keras.datasets.fashion_mnist
-(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-x_test = np.reshape(x_test, [-1, 28, 28, 1])
-x_test = x_test.astype(np.float32) / 255
-
-to_categorical = tf.keras.utils.to_categorical
-y_test = to_categorical(y_test)
-
-x_test = x_test[0:1000, :]
-y_test = y_test[0:1000]
-
-y_test = np.array(y_test, dtype=np.int32)
-
-evaluate(x_test, y_test, 1000)
-
-x_generate = aiTest(x_test)
-
-evaluate(x_generate, y_test, 1000)
-
-print(get_ssim(x_generate, x_test))
