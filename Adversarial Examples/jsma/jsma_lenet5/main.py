@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 from skimage.measure import compare_ssim
 
-import jsma
 import deepfool
 
 
@@ -109,44 +108,6 @@ def evaluate(x_data, y_data, num):
 
             else:
                 print("Error")
-
-
-def make_jsma(x_data, epochs=100, eps=1.0, batch_size=128):
-    """
-    Generate JSMA by running env.x_jsma.
-    """
-    with tf.Graph().as_default():
-        print('\nMaking adversarials via JSMA')
-
-        n_sample = x_data.shape[0]
-        n_batch = int((n_sample + batch_size - 1) / batch_size)
-        x_adv = np.empty_like(x_data)
-
-        x = tf.placeholder(tf.float32, (None, 28, 28, 1), name='x')
-        target = tf.placeholder(tf.int32, (), name='target')
-        epoch = tf.placeholder_with_default(20, shape=(), name='epochs')
-        ep = tf.placeholder_with_default(0.2, shape=(), name='eps')
-
-        jsma_model = jsma.jsma(inference, x, target, eps=ep, epochs=epoch)
-
-        saver = tf.train.Saver()
-        with tf.Session() as sess:
-            ckpt = tf.train.get_checkpoint_state("model_lenet5")
-            if ckpt and ckpt.model_checkpoint_path:
-                saver.restore(sess, ckpt.model_checkpoint_path)
-                for batch in range(n_batch):
-                    start = batch * batch_size
-                    end = min(n_sample, start + batch_size)
-                    feed_dict = {
-                        x: x_data[start:end],
-                        target: np.random.choice(10),
-                        epoch: epochs,
-                        ep: eps}
-                    adv = sess.run(jsma_model, feed_dict=feed_dict)
-                    x_adv[start:end] = adv
-    print('over')
-
-    return x_adv
 
 
 def make_deep_fool(x_data, epochs=20, eta=0.01, batch_size=64):
